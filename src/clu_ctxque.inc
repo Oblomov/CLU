@@ -11,8 +11,10 @@
 
 #include <pthread.h>
 
-/* Internal: management of thread-local queue */
+/* Internal: management of thread-local queue/device/context */
 static pthread_mutex_t clu_mutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_key_t *current_ctx; /* thread-local current context */
+static pthread_key_t *current_dev; /* thread-local current device */
 static pthread_key_t *current_que; /* thread-local current queue */
 
 /* Internal functions */
@@ -25,14 +27,28 @@ _cluInitTLS(void)
 	pthread_mutex_lock(&clu_mutex);
 	if (current_que) goto unlock;
 
-	current_que = NALLOC(1, pthread_key_t);
-	if (!current_que) {
+	current_ctx = NALLOC(1, pthread_key_t);
+	if (!current_ctx) {
 		ret = ENOMEM;
 		goto unlock;
 	}
+	current_dev = NALLOC(1, pthread_key_t);
+	if (!current_dev) {
+		ret = ENOMEM;
+		goto free_ctx;
+	}
+	current_que = NALLOC(1, pthread_key_t);
+	if (!current_que) {
+		ret = ENOMEM;
+		goto free_dev;
+	}
 	ret = pthread_key_create(current_que, NULL);
-	if (ret)
-		free(current_que);
+	if (!ret) goto unlock;
+	free(current_que);
+free_dev:
+	free(current_dev);
+free_ctx:
+	free(current_ctx);
 unlock:
 	pthread_mutex_unlock(&clu_mutex);
 	return ret;
@@ -67,26 +83,24 @@ cluGetQueueDevice(cl_command_queue que, cl_int *errcode_ret)
 cl_context
 cluGetCurrentContext(cl_int *errcode_ret)
 {
-	cl_int error;
-	cl_command_queue que = cluGetCurrentQueue(&error);
-	RETURN_ON_ERROR;
-	return cluGetQueueContext(que, errcode_ret);
+	cl_context ret = pthread_getspecific(*current_ctx);
+	cl_int error = ret ? CL_SUCCESS : CL_INVALID_CONTEXT;
+	_RETURN(error, ret);
 }
 
 cl_device_id
 cluGetCurrentDevice(cl_int *errcode_ret)
 {
-	cl_int error;
-	cl_command_queue que = cluGetCurrentQueue(&error);
-	RETURN_ON_ERROR;
-	return cluGetQueueDevice(que, errcode_ret);
+	cl_device_id ret = pthread_getspecific(*current_dev);
+	cl_int error = ret ? CL_SUCCESS : CL_INVALID_DEVICE;
+	_RETURN(error, ret);
 }
 
 cl_command_queue
 cluGetCurrentQueue(cl_int *errcode_ret)
 {
 	cl_command_queue ret = pthread_getspecific(*current_que);
-	cl_int error = ret ? CL_SUCCESS : CLU_NO_CURRENT_QUEUE;
+	cl_int error = ret ? CL_SUCCESS : CL_INVALID_COMMAND_QUEUE;
 	_RETURN(error, ret);
 }
 
@@ -94,9 +108,20 @@ cl_command_queue
 cluSetCurrentQueue(cl_command_queue new_que, cl_int *errcode_ret)
 {
 	cl_command_queue ret = pthread_getspecific(*current_que);
+	cl_int error = CL_SUCCESS;
 	int pterr = pthread_setspecific(*current_que, new_que);
-	if (!pterr)
-		_RETURN(CL_SUCCESS, ret);
+	if (!pterr) {
+		cl_device_id dev = cluGetQueueDevice(new_que, &error);
+		if (error) _RETURN(error, ret);
+		pterr = pthread_setspecific(*current_dev, dev);
+		if (!pterr) {
+			cl_context ctx = cluGetQueueContext(new_que, &error);
+			if (error) _RETURN(error, ret);
+			pterr = pthread_setspecific(*current_ctx, ctx);
+			if (!pterr)
+				_RETURN(error, ret);
+		}
+	}
 	if (pterr == ENOMEM)
 		_RETURN(CL_OUT_OF_HOST_MEMORY, ret);
 	_RETURN(CL_INVALID_VALUE, ret);
@@ -151,7 +176,7 @@ cluCreateCommandQueue(
 
 	if (!ctx) {
 		ctx = cluGetCurrentContext(&error);
-		if (error == CLU_NO_CURRENT_CONTEXT) {
+		if (error == CL_INVALID_CONTEXT) {
 			/* no current context */
 			ctx = cluCreateContext(NULL,
 					(dev ? 1 : 0),

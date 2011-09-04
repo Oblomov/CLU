@@ -232,17 +232,6 @@ cl_device_id
 cluGetQueueDevice(cl_command_queue que, cl_int *errcode_ret);
 
 /**
-  The OpenCL Utility library defines a current queue and an associated current
-  device and context. If no current queue is defined, the cluGetCurrent*() functions
-  will set an appropriate error status (CLU_NO_CURRENT_*), overloading
-  CL_INVALID_COMMAND_QUEUE.
- */
-
-#define CLU_NO_CURRENT_CONTEXT CL_INVALID_COMMAND_QUEUE
-#define CLU_NO_CURRENT_DEVICE CL_INVALID_COMMAND_QUEUE
-#define CLU_NO_CURRENT_QUEUE CL_INVALID_COMMAND_QUEUE
-
-/**
   Get the context of the current command queue
   */
 cl_context

@@ -18,8 +18,6 @@ cluMalloc(
 {
 	cl_int error = CL_SUCCESS;
 	cl_context ctx = cluGetCurrentContext(&error);
-	if (error == CLU_NO_CURRENT_CONTEXT)
-		error = CL_INVALID_CONTEXT;
 	RETURN_ON_ERROR;
 	return clCreateBuffer(ctx, flags, size, host_ptr, errcode_ret);
 }
