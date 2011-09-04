@@ -242,16 +242,20 @@ cluGetDevices(
 	}
 
 	for (cl_uint i=0; i < *num_devices; ++i)
-		devs[i] = cluGetDeviceByID(platform, devids[i], &error);
+		devs[i] = cluGetDeviceByID(devids[i], &error);
 
 	*devices = devs;
 	return error;
 }
 
 clu_devptr
-cluGetDeviceByID(cl_platform_id platform, cl_device_id id, cl_int *errcode_ret)
+cluGetDeviceByID(cl_device_id id, cl_int *errcode_ret)
 {
 	cl_int error = CL_SUCCESS;
+	cl_platform_id platform = NULL;
+	error = clGetDeviceInfo(id, CL_DEVICE_PLATFORM,
+			sizeof(platform), &platform, NULL);
+	RETURN_ON_ERROR;
 	clu_pfmptr pinfo = cluGetPlatformByID(platform, &error);
 	RETURN_ON_ERROR;
 

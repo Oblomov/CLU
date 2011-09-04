@@ -210,12 +210,12 @@ cluGetDevices(
 	cl_uint *num_devices);
 
 /**
-  Returns a clu_devptr pointing to the device matching the given ID on the
-  specified platform. Error conditions are set in errcode_ret.
+  Returns a clu_devptr pointing to the device matching the given ID. Error
+  conditions are set in errcode_ret.
  */
 
 clu_devptr
-cluGetDeviceByID(cl_platform_id platform, cl_device_id id, cl_int *errcode_ret);
+cluGetDeviceByID(cl_device_id id, cl_int *errcode_ret);
 
 /**
   Create a program loading given source files.
