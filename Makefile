@@ -20,13 +20,15 @@ DEVPATH=$(OUTDIR)/$(LIBBASE)
 export OUTDIR SONAME LIBPATH
 
 $(DEVPATH): $(SOPATH)
-	ln -s $(SONAME) $(DEVPATH)
+	ln -sf $(SONAME) $(DEVPATH)
 
 $(SOPATH): $(LIBPATH) $(OUTDIR)
-	ln -s $(LIBNAME) $(SOPATH)
+	ln -sf $(LIBNAME) $(SOPATH)
 
 $(OUTDIR) :
 	mkdir -p $@
 
 $(LIBPATH) : $(OUTDIR)
 	$(MAKE) -C src $(LIBPATH)
+
+.PHONY : $(LIBPATH)
