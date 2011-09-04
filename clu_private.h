@@ -71,6 +71,11 @@ _cluGetDeviceIDs(
 	cl_device_id **devices,
 	cl_uint *num_devices);
 
+/* Internal: initialize the thread-local storage */
+static
+int
+_cluInitTLS(void);
+
 /* Internal: reads a file into memory */
 static
 char*

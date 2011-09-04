@@ -13,13 +13,15 @@ SRC=clu.c \
     clu_generic.inc \
     clu_platform.inc \
     clu_device.inc \
-    clu_program.inc
+    clu_program.inc \
+    clu_ctxque.inc
 HDR=clu.h clu_private.h
 
+LIBS=-lOpenCL -lpthread
 
 clu.o : $(SRC) $(ΗDR)
 	$(CC) -fPIC $(CFLAGS) -c $<
 
 $(LIBNAME) : clu.o
-	$(LD) -shared -soname=$(SONAME) -o $(LIBNAME) $+ -lOpenCL
+	$(LD) -shared -soname=$(SONAME) -o $(LIBNAME) $+ $(LIBS)
 

@@ -218,6 +218,80 @@ clu_devptr
 cluGetDeviceByID(cl_device_id id, cl_int *errcode_ret);
 
 /**
+  Get the context associated with a given command queue
+ */
+
+cl_context
+cluGetQueueContext(cl_command_queue que, cl_int *errcode_ret);
+
+/**
+  Get the device associated with a given command queue
+ */
+
+cl_device_id
+cluGetQueueDevice(cl_command_queue que, cl_int *errcode_ret);
+
+/**
+  The OpenCL Utility library defines a current queue and an associated current
+  device and context. If no current queue is defined, the cluGetCurrent*() functions
+  will set an appropriate error status (CLU_NO_CURRENT_*), overloading
+  CL_INVALID_COMMAND_QUEUE.
+ */
+
+#define CLU_NO_CURRENT_CONTEXT CL_INVALID_COMMAND_QUEUE
+#define CLU_NO_CURRENT_DEVICE CL_INVALID_COMMAND_QUEUE
+#define CLU_NO_CURRENT_QUEUE CL_INVALID_COMMAND_QUEUE
+
+/**
+  Get the context of the current command queue
+  */
+cl_context
+cluGetCurrentContext(cl_int *errcode_ret);
+
+/**
+  Get the device of the current command queue
+  */
+cl_device_id
+cluGetCurrentDevice(cl_int *errcode_ret);
+
+/**
+  Get the current command queue
+  */
+cl_command_queue
+cluGetCurrentQueue(cl_int *errcode_ret);
+
+/**
+  Set the current command queue, returning the previous one
+  */
+cl_command_queue
+cluSetCurrentQueue(cl_command_queue new_que, cl_int *errcode_ret);
+
+/**
+  Create a context for the specified platform and devices. If the
+  platform is NULL, the devices' platform will be used. If the devices
+  are NULL, the default platform device will be used. If both are NULL,
+  the default device of the default platform will be used.
+ */
+cl_context
+cluCreateContext(
+	cl_platform_id pfm,
+	cl_uint num_devs,
+	cl_device_id *devs,
+	cl_int *errcode_ret);
+
+/**
+  Create a command queue for the specified devices in the given context. If the
+  context is NULL, the current context will be used, or a new one will be
+  created. If the device is NULL, the first device in the context will be used.
+ */
+cl_command_queue
+cluCreateCommandQueue(
+	cl_context ctx,
+	cl_device_id dev,
+	cl_command_queue_properties props,
+	cl_int *errcode_ret);
+
+/**
   Create a program loading given source files.
   The number of source files is given in count, and the file names
   are given in the array of strings filenames.

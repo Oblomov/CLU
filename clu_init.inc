@@ -13,6 +13,7 @@ void
 __attribute__((constructor))
 _init(void)
 {
+	_cluInitTLS();
 	_cluInitPlatformCache();
 }
 
