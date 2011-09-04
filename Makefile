@@ -8,9 +8,16 @@ LIBNAME=$(LIBBASENAME).$(VERSION)
 
 CFLAGS+= -std=c99
 
+SRC=clu.c \
+    clu_generic.inc \
+    clu_platform.inc \
+    clu_device.inc \
+    clu_program.inc
+HDR=clu.h clu_private.h
 
-clu.o : clu.c clu.h
-	$(CC) -fPIC $(CFLAGS) -c clu.c
+
+clu.o : $(SRC) $(ΗDR)
+	$(CC) -fPIC $(CFLAGS) -c $<
 
 $(LIBNAME) : clu.o
 	$(LD) -shared -soname=$(SONAME) -o $(LIBNAME) $+ -lOpenCL
