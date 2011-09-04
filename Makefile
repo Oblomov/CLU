@@ -1,0 +1,32 @@
+# OpenCL Utility library Makefile.
+# This should not be invoked directly
+
+MAJOR=0
+MINOR=0
+PATCHLEVEL=1
+
+VERSION=$(MAJOR).$(MINOR).$(PATCHLEVEL)
+
+LIBBASE=libCLU.so
+
+OUTDIR=$(CURDIR)/lib
+
+SONAME=$(LIBBASE).$(MAJOR)
+SOPATH=$(OUTDIR)/$(SONAME)
+LIBNAME=$(LIBBASE).$(VERSION)
+LIBPATH=$(OUTDIR)/$(LIBNAME)
+DEVPATH=$(OUTDIR)/$(LIBBASE)
+
+export OUTDIR SONAME LIBPATH
+
+$(DEVPATH): $(SOPATH)
+	ln -s $(SONAME) $(DEVPATH)
+
+$(SOPATH): $(LIBPATH) $(OUTDIR)
+	ln -s $(LIBNAME) $(SOPATH)
+
+$(OUTDIR) :
+	mkdir -p $@
+
+$(LIBPATH) : $(OUTDIR)
+	$(MAKE) -C src $(LIBPATH)

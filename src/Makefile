@@ -1,10 +1,9 @@
-MAJOR=0
-VERSION=$(MAJOR).0.1
-LIBBASENAME=libCLU.so
-SONAME=$(LIBBASENAME).$(MAJOR)
-LIBNAME=$(LIBBASENAME).$(VERSION)
+# OpenCL Utility library Makefile.
+# This should not be invoked directly
 
-.DEFAULT_GOAL:=$(LIBNAME)
+ifeq ($(MAKELEVEL), 0)
+$(error Please do not run make from the src directory)
+endif
 
 CFLAGS+= -std=c99
 
@@ -20,9 +19,11 @@ HDR=clu.h clu_private.h
 INCPATH=-I../include
 LIBS=-lOpenCL -lpthread
 
-clu.o : $(SRC) $(ΗDR)
-	$(CC) -v -v -v -fPIC $(CFLAGS) $(INCPATH) -c $<
 
-$(LIBNAME) : clu.o
-	$(LD) -shared -soname=$(SONAME) -o $(LIBNAME) $+ $(LIBS)
+$(LIBPATH) : $(OUTDIR)/clu.o
+	$(LD) -shared -soname=$(SONAME) -o $@ $+ $(LIBS)
+
+$(OUTDIR)/clu.o : $(SRC) $(ΗDR)
+	$(CC) -o $@ -fPIC $(CFLAGS) $(INCPATH) -c $<
+
 
