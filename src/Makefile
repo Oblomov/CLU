@@ -12,8 +12,8 @@ SRC=clu.c \
     clu_generic.inc \
     clu_platform.inc \
     clu_device.inc \
-    clu_program.inc \
-    clu_ctxque.inc
+    clu_ctxque.inc \
+    clu_program.inc
 HDR=clu.h clu_private.h
 
 INCPATH=-I../include
