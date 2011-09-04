@@ -1,0 +1,21 @@
+This is the OpenCL Utility (CLU) library, a set of functions and C
+macros to make the host side of OpenCL programming less tedious.
+
+The library provides wrappers for common complex or repetitive tasks
+such as platform and device selection, information gathering, command
+queue management and memory management. This is achieved while keeping
+perfect compatibility with the underlying OpenCL library, allowing code
+and data mixing.
+
+Some wrapper function will appear to be overly slower than the
+lower-level OpenCL functions. This is generally due to CLU making an
+effort to anticipate future requests and retrieving/caching additional
+information. For example, all the platform/device information will be
+available in appropriate structures when getting a platform/device using
+the CLU functions, instead of requiring distinct (and often repetitive)
+calls to the appropriate clGet*Info() OpenCL functions.
+
+Some of the CLU functions are shamelessly inspired by the NVIDIA CUDA
+APIs, although an effort has been made to keep the interface more
+consistent with the one found in OpenCL, especially in terms of return
+values and error management.
