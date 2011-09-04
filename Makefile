@@ -9,6 +9,7 @@ LIBNAME=$(LIBBASENAME).$(VERSION)
 CFLAGS+= -std=c99
 
 SRC=clu.c \
+    clu_init.inc \
     clu_generic.inc \
     clu_platform.inc \
     clu_device.inc \
