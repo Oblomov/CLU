@@ -291,6 +291,20 @@ cluCreateCommandQueue(
 	cl_command_queue_properties props,
 	cl_int *errcode_ret);
 
+/** Create a memory buffer on the current context */
+cl_mem
+cluMalloc(
+	size_t size,
+	cl_mem_flags flags,
+	void * host_ptr,
+	cl_int *errcode_ret);
+
+/** Release a memory buffer */
+inline
+cl_int
+cluFree(cl_mem memobj)
+{ return clReleaseMemObject(memobj); }
+
 /**
   Create a program loading given source files.
   The number of source files is given in count, and the file names

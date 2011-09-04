@@ -15,4 +15,5 @@
 #include "clu_platform.inc"
 #include "clu_device.inc"
 #include "clu_ctxque.inc"
+#include "clu_memory.inc"
 #include "clu_program.inc"

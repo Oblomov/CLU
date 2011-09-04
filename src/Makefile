@@ -13,6 +13,7 @@ SRC=clu.c \
     clu_platform.inc \
     clu_device.inc \
     clu_ctxque.inc \
+    clu_memory.inc \
     clu_program.inc
 HDR=clu.h clu_private.h
 

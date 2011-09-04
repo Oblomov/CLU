@@ -1,4 +1,3 @@
-* cluMalloc, cluFree
 * cluMemset, cluCalloc
 * cluMallocPitch, cluCallocPitch
 * cluMemcpy, cluMemcpy2D
