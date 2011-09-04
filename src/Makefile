@@ -17,10 +17,11 @@ SRC=clu.c \
     clu_ctxque.inc
 HDR=clu.h clu_private.h
 
+INCPATH=-I../include
 LIBS=-lOpenCL -lpthread
 
 clu.o : $(SRC) $(ΗDR)
-	$(CC) -fPIC $(CFLAGS) -c $<
+	$(CC) -v -v -v -fPIC $(CFLAGS) $(INCPATH) -c $<
 
 $(LIBNAME) : clu.o
 	$(LD) -shared -soname=$(SONAME) -o $(LIBNAME) $+ $(LIBS)

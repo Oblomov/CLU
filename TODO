@@ -1,4 +1,3 @@
-* restructure directory (src/, include/CL, include/)
 * cluMalloc, cluFree
 * cluMemset, cluCalloc
 * cluMallocPitch, cluCallocPitch

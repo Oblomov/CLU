@@ -7,7 +7,7 @@
    See LEGAL for license information and other legalese
  */
 
-#include "clu.h"
+#include <CL/clu.h>
 #include "clu_private.h"
 
 #include "clu_init.inc"
