@@ -288,6 +288,21 @@ cluMalloc(
 	void * host_ptr,
 	cl_int *errcode_ret);
 
+/**
+  Create a memory buffer on the current context with enough memory to hold _height_
+  rows of width at least hsize bytes each. The actual row width (in bytes) made
+  available in the allocated buffer is computed for the current device and
+  stored in *pitch
+ */
+cl_mem
+cluMallocPitch(
+	size_t *pitch,
+	size_t hsize,
+	size_t height,
+	cl_mem_flags flags,
+	void * host_ptr,
+	cl_int *errcode_ret);
+
 /** Release a memory buffer */
 inline
 cl_int
