@@ -70,7 +70,7 @@ error_strings[] =
 };
 
 static const size_t error_string_count = ARRAY_SIZE(error_strings);
-static const size_t unknown_error_index = error_string_count - 1;
+#define unknown_error_index (error_string_count - 1)
 
 const char *
 cluGetErrorString(cl_int error)
@@ -108,7 +108,7 @@ device_type_string[] =
 };
 
 static const size_t device_type_string_count = ARRAY_SIZE(device_type_string);
-static const size_t unknown_device_type_index = device_type_string_count - 1;
+#define unknown_device_type_index (device_type_string_count - 1)
 
 const char *
 cluGetDeviceTypeString(cl_device_type type)
