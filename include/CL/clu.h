@@ -357,6 +357,12 @@ cluLoadProgramFromSourceFile(
 	const char *filename,
 	cl_int *errcode_ret)
 { return cluLoadProgramFromSourceFiles(context, 1, &filename, errcode_ret); }
+  
+/**
+  Build the given program with all default options.
+ */
+cl_int 
+cluBuildProgramSimple(cl_program program);
 
 
 #ifdef __cplusplus

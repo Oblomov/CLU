@@ -103,3 +103,9 @@ ret:
 	return prog;
 }
 
+
+cl_int 
+cluBuildProgramSimple(cl_program program)
+{
+  return clBuildProgram(program, 0, NULL, NULL, NULL, NULL);
+}
