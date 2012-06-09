@@ -218,6 +218,12 @@ clu_devptr
 cluGetDeviceByID(cl_device_id id, cl_int *errcode_ret);
 
 /**
+   Returns the first device associated with the given context.
+ */
+cl_device_id 
+cluGetContextDefaultDevice(cl_context ctx, cl_int *errcode_ret);
+
+/**
   Get the context associated with a given command queue
  */
 
@@ -267,6 +273,15 @@ cluCreateContext(
 	cl_uint num_devs,
 	cl_device_id *devs,
 	cl_int *errcode_ret);
+
+/**
+  Find the first platform that has devices of the given type and
+  return a context using some or all of those devices (depending on
+  the underlying implementation of clCreateContextFromType).
+ */
+cl_context 
+cluCreateContextByType(cl_device_type type,
+		       cl_int *errcode_ret);
 
 /**
   Create a command queue for the specified devices in the given context. If the
@@ -342,6 +357,25 @@ cluLoadProgramFromSourceFile(
 	const char *filename,
 	cl_int *errcode_ret)
 { return cluLoadProgramFromSourceFiles(context, 1, &filename, errcode_ret); }
+  
+/**
+  Build the given program with all default options.
+ */
+cl_int 
+cluBuildProgramSimple(cl_program program);
+
+/**
+  Return the <code>n</code> rounded up to the nearest multiple of
+  <code>m</code>. <code>m</code> must be non-zero or behavior is
+  undefined. Since this is static inline, it is as fast as a macro on
+  modern compilers.
+ */
+static inline 
+size_t 
+cluRoundUp(size_t n, size_t m) 
+{ 
+  return ((n + m - 1)/m)*m;
+} 
 
 
 #ifdef __cplusplus

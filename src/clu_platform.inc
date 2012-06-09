@@ -204,10 +204,10 @@ cluGetPlatformByName(const char* name, cl_int *errcode_ret)
 
 	for (size_t i=0; i < _num_platforms; ++i) {
 		clu_platform *curr = _platforms+i;
+		error = _cluGetPlatformInfo(curr);
+		RETURN_ON_ERROR;
 		/* TODO locale */
 		if (strncasecmp(name, curr->name, len) == 0) {
-			error = _cluGetPlatformInfo(curr);
-			RETURN_ON_ERROR;
 			_RETURN(error, curr);
 		}
 	}
