@@ -54,6 +54,17 @@ unlock:
 	return ret;
 }
 
+cl_device_id 
+cluGetContextDefaultDevice(cl_context ctx, cl_int *errcode_ret) 
+{
+  cl_int error;
+  cl_device_id dev = NULL;
+  error = clGetContextInfo(ctx, CL_CONTEXT_DEVICES, sizeof(dev), &dev, NULL);
+  RETURN_ON_ERROR;
+
+  _RETURN(error, dev);
+}
+
 cl_context
 cluGetQueueContext(cl_command_queue que, cl_int *errcode_ret)
 {

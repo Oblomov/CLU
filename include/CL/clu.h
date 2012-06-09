@@ -218,6 +218,12 @@ clu_devptr
 cluGetDeviceByID(cl_device_id id, cl_int *errcode_ret);
 
 /**
+   Returns the first device associated with the given context.
+ */
+cl_device_id 
+cluGetContextDefaultDevice(cl_context ctx, cl_int *errcode_ret);
+
+/**
   Get the context associated with a given command queue
  */
 
