@@ -343,6 +343,19 @@ cluLoadProgramFromSourceFile(
 	cl_int *errcode_ret)
 { return cluLoadProgramFromSourceFiles(context, 1, &filename, errcode_ret); }
 
+/**
+  Return the <code>n</code> rounded up to the nearest multiple of
+  <code>m</code>. <code>m</code> must be non-zero or behavior is
+  undefined. Since this is static inline, it is as fast as a macro on
+  modern compilers.
+ */
+static inline
+size_t
+cluRoundUp(size_t n, size_t m)
+{
+  return ((n + m - 1)/m)*m;
+}
+
 
 #ifdef __cplusplus
 }
