@@ -275,6 +275,15 @@ cluCreateContext(
 	cl_int *errcode_ret);
 
 /**
+  Find the first platform that has devices of the given type and
+  return a context using some or all of those devices (depending on
+  the underlying implementation of clCreateContextFromType).
+ */
+cl_context 
+cluCreateContextByType(cl_device_type type,
+		       cl_int *errcode_ret);
+
+/**
   Create a command queue for the specified devices in the given context. If the
   context is NULL, the current context will be used, or a new one will be
   created. If the device is NULL, the first device in the context will be used.

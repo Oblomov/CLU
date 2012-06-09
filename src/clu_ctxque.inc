@@ -175,6 +175,67 @@ cluCreateContext(
 			NULL, NULL, errcode_ret);
 }
 
+
+cl_context 
+cluCreateContextByType(cl_device_type type,
+		       cl_int *errcode_ret)
+{
+  cl_int error = CL_SUCCESS;
+  cl_uint numPlatforms = 0;
+  cl_context context = NULL;
+
+  error = clGetPlatformIDs(0, NULL, &numPlatforms);
+  RETURN_ON_ERROR;
+
+  if(numPlatforms < 1)
+    _RETURN(CL_DEVICE_NOT_FOUND, NULL);
+  
+  // We have at least one
+  cl_platform_id* platforms = NALLOC(numPlatforms, cl_platform_id);
+  error = clGetPlatformIDs(numPlatforms, platforms, NULL);
+  RETURN_ON_ERROR;
+   
+  for(int i=0; i<numPlatforms; i++) {
+    cl_platform_id platform_id = platforms[i];
+
+    cl_context_properties cps[3] = {
+      CL_CONTEXT_PLATFORM, 
+      (cl_context_properties)platform_id, 
+      0
+    };
+      
+    context = clCreateContextFromType(
+				      cps,
+				      type,
+				      NULL,
+				      NULL,
+				      &error);
+    if(error == CL_SUCCESS) {
+      // We have a context, so we are done.
+      break; 
+    } else if(error == CL_DEVICE_NOT_FOUND || 
+	      error == CL_DEVICE_NOT_AVAILABLE || 
+	      error == CL_OUT_OF_RESOURCES) {
+      // No context yet so make sure context is NULL and try the next platform.
+      // These errors probably only effect this one platform.
+      context = NULL; 
+    } else {
+      // There was another error, so probably something else is wrong so return 
+      // the error instead of continuing to try other platforms.
+      RETURN_ON_ERROR;
+    }
+  }
+
+  free(platforms);
+  
+  if( context == NULL ) {
+    // If context is still null we have failed.    
+    _RETURN(CL_DEVICE_NOT_FOUND, NULL);
+  }
+
+  _RETURN(CL_SUCCESS, context);
+}
+
 cl_command_queue
 cluCreateCommandQueue(
 	cl_context ctx,
